@@ -1,0 +1,309 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pep Talk Generator ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1026;
+    --card:#ffffffee;
+    --ink:#0f1020;
+    --accent:#7c3aed;
+    --accent-2:#22d3ee;
+    --ring: rgba(124,58,237,.35);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 800px at 10% 10%, rgba(124,58,237,.15), transparent 60%),
+      radial-gradient(900px 600px at 90% 20%, rgba(34,211,238,.15), transparent 60%),
+      var(--bg);
+    min-height:100dvh;
+  }
+  .glitter{pointer-events:none;position:fixed;inset:0;background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,.6), transparent 60%);
+    animation:twinkle 4s linear infinite;opacity:.45}
+  @keyframes twinkle{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+
+  header{text-align:center;color:white;padding:28px 18px 0}
+  header h1{font-family:Pacifico,cursive;font-size:clamp(28px,4.2vw,48px);margin:0 0 4px;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+  header .tag{font-weight:600;opacity:.9}
+
+  .directions{
+    background:rgba(255,255,255,.08);color:white;border-radius:12px;
+    padding:14px 20px;margin:16px auto;max-width:820px;font-size:15px;line-height:1.55;
+  }
+
+  .wrap{width:min(1100px,94vw);margin:0 auto 80px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:12px auto 18px}
+  .pill{display:inline-flex;align-items:center;gap:10px;border:2px solid var(--accent);
+        background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.85));padding:8px 12px;
+        border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .btn{padding:10px 14px;border-radius:14px;border:2px solid var(--accent);
+       background:linear-gradient(180deg,white,#f6f3ff);font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(124,58,237,.15)}
+  .btn:active{transform:translateY(1px)}
+
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:2px solid rgba(17,17,17,.08);border-radius:18px;padding:14px;box-shadow:0 20px 60px rgba(17,17,17,.12)}
+  label{font-weight:800;color:var(--ink);margin-bottom:8px;display:block}
+  select{width:100%;padding:12px;border-radius:12px;border:2px solid rgba(17,17,17,.1);outline:none}
+  select:focus{box-shadow:0 0 0 6px var(--ring)}
+  .sm{font-size:12px;color:#333;font-style:italic}
+
+  .out{margin-top:18px;font-size:clamp(20px,2.4vw,28px);font-weight:800;text-align:center;
+       background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .deck{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  @media(max-width:720px){.deck{grid-template-columns:1fr}}
+  .box{background:var(--card);padding:14px;border-radius:16px;border:2px solid rgba(17,17,17,.08)}
+
+  .theme{border:2px dashed rgba(255,255,255,.55);color:white;padding:10px 12px;border-radius:14px}
+  .theme select{background:transparent;color:white;border:none;outline:none}
+  .theme option{color:black}
+
+  footer{color:#b6b6b6;text-align:center;margin:28px auto 24px}
+  a{color:var(--accent-2);font-weight:700;text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  .sticker{position:fixed;right:10px;bottom:10px;font-size:40px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.25));user-select:none;animation:floaty 5s ease-in-out infinite}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+  .theme-neon{--bg:#0f1020;--accent:#22d3ee;--accent-2:#a855f7}
+  .theme-cottoncandy{--bg:linear-gradient(120deg,#ffe1f2,#e4f0ff);--accent:#ec4899;--accent-2:#06b6d4}
+  .theme-gold{--bg:#0b0a09;--accent:#f59e0b;--accent-2:#fde68a}
+  .theme-royal{--bg:#0b1026;--accent:#7c3aed;--accent-2:#22c55e}
+</style>
+</head>
+<body class="theme-royal">
+<div class="glitter"></div>
+
+<header>
+  <h1>Elizabeth's Pep Talk Generator</h1>
+  <div class="tag">BlackPlanet x MySpace energy with grown up polish</div>
+  <div class="directions">
+    Pick one option from each column to build your pep talk. Hit <strong>Randomize</strong> for a surprise combo or choose from the dropdowns to fine tune. Turn on <em>Professional tone only</em> to filter slang. Add a background image and a profile song for full throwback vibes. Click <strong>Copy</strong> and paste into slides, emails, or handouts.
+  </div>
+  <div class="toolbar">
+    <div class="theme">
+      Theme:
+      <select id="theme">
+        <option value="royal">Royal</option>
+        <option value="neon">Neon</option>
+        <option value="cottoncandy">Cotton Candy</option>
+        <option value="gold">Gold</option>
+      </select>
+    </div>
+    <label class="pill"><input type="checkbox" id="pro"> Professional tone only</label>
+    <button class="btn" id="rnd">Randomize</button>
+    <button class="btn" id="copy">Copy</button>
+    <button class="btn" id="save">Save style</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+    <div class="card">
+      <label for="c1">Column 1 — Opener</label>
+      <select id="c1"></select>
+      <div class="sm">How you start, for example “Legend,”</div>
+    </div>
+    <div class="card">
+      <label for="c2">Column 2 — Focus Point</label>
+      <select id="c2"></select>
+      <div class="sm">What you are hyping, for example “your energy”</div>
+    </div>
+    <div class="card">
+      <label for="c3">Column 3 — Action or Quality</label>
+      <select id="c3"></select>
+      <div class="sm">The magic part, for example “slays the day,”</div>
+    </div>
+    <div class="card">
+      <label for="c4">Column 4 — Mic Drop</label>
+      <select id="c4"></select>
+      <div class="sm">The punchy closer, for example “period.”</div>
+    </div>
+  </div>
+
+  <div class="out" id="out"></div>
+
+  <div class="deck">
+    <div class="box">
+      <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <strong>Profile song</strong>
+        <input id="song" class="pill" style="flex:1" placeholder="Paste a YouTube link or MP3 link">
+        <button class="btn" id="play">Play</button>
+      </div>
+      <div class="sm">Tip: Share on YouTube, copy the link. Watch links will auto convert to an embed.</div>
+      <div id="player" style="margin-top:10px"></div>
+    </div>
+    <div class="box">
+      <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <strong>Background image</strong>
+        <input id="bg" class="pill" style="flex:1" placeholder="Paste an image URL">
+        <button class="btn" id="setbg">Set</button>
+      </div>
+      <div class="sm">Paste a public image link. Leave blank to use the theme background.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sticker" title="Top 8 energy">💿</div>
+
+<footer>
+  Built for Elizabeth. No em dashes used. Your style saves in this browser.
+</footer>
+
+<script>
+// Data sets
+const col1_base = ["Champ,","Fact:","Everybody says","Dang...","Friend,","Just saying...","Superstar,","Tiger,","Self,","Know this:","News Alert:","I mean...","Ace:","Excuse me but","Experts agree:","In my opinion","Hear ye, hear ye:","Okay, listen up:"];
+const col2_base = ["the mere idea of you","your soul","your vibe today","everything you do","your personal style","every thought you have","that sparkle in your eye","your presence here","what you got going on","the essential you","your life’s journey","that saucy personality","your DNA","that brain of yours","your awesome ideas","the way you think","what ever your secret is","all that you share"];
+const col3_base = ["has serious game,","rains magic,","deserves the Nobel prize,","is fire,","breeds miracles,","is paying off big time,","shows master skills,","just shimmers,","is a national treasure,","should be bottled and sold,","is the next big thing,","roars like a lion,","is a rainbow factory,","is made of diamonds,","makes birds sing,","should be taught in school,","makes my world go ‘round,","is 100% legit,"];
+const col4_base = ["24/7.","you got this.","and that’s a fact.","so treat yourself.","now crush it.","that’s just science.","would I lie?","for reals.","mic drop.","you hidden gem.","keep on, keeping on.","period.","make it happen!","now, let’s dance!","high five to you.","say it again!","according to CNN.","so get used to it."];
+
+const col1_new = ["Legend,","Real talk:","No cap,","Boss,","Rockstar,","Fam,","Innovator,","Trailblazer,","Visionary,","Captain,"];
+const col2_new = ["your energy","that growth mindset","your grind","your brilliance","that bold spirit","your leadership","your creativity","your resilience","your authenticity","your big brain"];
+const col3_new = ["slays the day,","sparks wildfire,","breaks barriers,","flips the script,","redefines excellence,","rewrites the rules,","keeps raising bars,","radiates greatness,","turns pressure into diamonds,","is unstoppable,"];
+const col4_new = ["periodt.","say less.","believe that.","for the culture.","no debate.","let’s run it back.","boom.","facts only.","always has, always will.","certified."];
+
+const slang1 = new Set(["No cap,","Fam,"]);
+const slang4 = new Set(["periodt.","say less.","for the culture.","no debate.","let’s run it back.","boom.","facts only.","always has, always will.","certified."]);
+
+// Elements
+const els = {
+  c1: document.getElementById('c1'),
+  c2: document.getElementById('c2'),
+  c3: document.getElementById('c3'),
+  c4: document.getElementById('c4'),
+  out: document.getElementById('out'),
+  rnd: document.getElementById('rnd'),
+  copy: document.getElementById('copy'),
+  pro: document.getElementById('pro'),
+  theme: document.getElementById('theme'),
+  player: document.getElementById('player'),
+  song: document.getElementById('song'),
+  play: document.getElementById('play'),
+  bg: document.getElementById('bg'),
+  setbg: document.getElementById('setbg'),
+  save: document.getElementById('save')
+};
+
+function merged(base, fresh, pro=false, slang=new Set()){
+  let all = base.concat(fresh);
+  if(pro){ all = all.filter(x => !slang.has(x)); }
+  return all;
+}
+
+function populate(){
+  const pro = els.pro.checked;
+  const lists = [
+    merged(col1_base, col1_new, pro, slang1),
+    merged(col2_base, col2_new, pro),
+    merged(col3_base, col3_new, pro),
+    merged(col4_base, col4_new, pro, slang4)
+  ];
+  [els.c1, els.c2, els.c3, els.c4].forEach((sel,i) => {
+    const prev = sel.value;
+    sel.innerHTML = "";
+    lists[i].forEach(text => {
+      const o = document.createElement('option');
+      o.textContent = text;
+      sel.appendChild(o);
+    });
+    if(lists[i].includes(prev)) sel.value = prev;
+  });
+  render();
+}
+
+function randomize(){
+  [els.c1, els.c2, els.c3, els.c4].forEach(sel => {
+    sel.selectedIndex = Math.floor(Math.random() * sel.options.length);
+  });
+  render();
+}
+
+function render(){
+  els.out.textContent = [els.c1.value, els.c2.value, els.c3.value, els.c4.value].join(" ");
+}
+
+function copyOut(){
+  navigator.clipboard.writeText(els.out.textContent).then(() => alert("Copied to clipboard"));
+}
+
+function setTheme(name){
+  document.body.classList.remove("theme-royal","theme-neon","theme-cottoncandy","theme-gold");
+  document.body.classList.add("theme-"+name);
+}
+
+function playSong(){
+  const link = els.song.value.trim();
+  if(!link){ els.player.innerHTML = ""; return; }
+  if(link.includes("youtube") || link.includes("youtu.be")){
+    let src = link;
+    if(link.includes("watch?v=")){
+      const id = link.split("watch?v=")[1].split("&")[0];
+      src = "https://www.youtube.com/embed/" + id + "?autoplay=1";
+    }
+    els.player.innerHTML = `<div style="aspect-ratio:16/9"><iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%; height:100%; border:0; border-radius:12px"></iframe></div>`;
+  } else {
+    els.player.innerHTML = `<audio controls autoplay style="width:100%"><source src="${link}"></audio>`;
+  }
+}
+
+function setBackground(){
+  const url = els.bg.value.trim();
+  if(url){
+    document.body.style.backgroundImage = `url('${url}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+  } else {
+    document.body.style.backgroundImage = "";
+  }
+}
+
+function savePrefs(){
+  const prefs = {
+    pro: els.pro.checked,
+    theme: els.theme.value,
+    bg: els.bg.value,
+    song: els.song.value
+  };
+  localStorage.setItem("pepPrefs", JSON.stringify(prefs));
+  alert("Style saved in this browser");
+}
+
+function loadPrefs(){
+  try{
+    const prefs = JSON.parse(localStorage.getItem("pepPrefs") || "{}");
+    if(prefs.theme){ els.theme.value = prefs.theme; setTheme(prefs.theme); }
+    if(prefs.pro){ els.pro.checked = prefs.pro; }
+    if(prefs.bg){ els.bg.value = prefs.bg; setBackground(); }
+    if(prefs.song){ els.song.value = prefs.song; playSong(); }
+  }catch(e){}
+}
+
+els.rnd.addEventListener('click', randomize);
+els.copy.addEventListener('click', copyOut);
+[els.c1, els.c2, els.c3, els.c4].forEach(sel => sel.addEventListener('change', render));
+els.pro.addEventListener('change', populate);
+els.theme.addEventListener('change', (e)=> setTheme(e.target.value));
+els.play.addEventListener('click', playSong);
+els.setbg.addEventListener('click', setBackground);
+els.save.addEventListener('click', savePrefs);
+
+loadPrefs();
+populate();
+randomize();
+</script>
+</body>
+</html>
