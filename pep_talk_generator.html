@@ -1,0 +1,148 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pep Talk Generator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 24px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    .sub { color:#555; margin-bottom: 16px; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 880px; }
+    @media (min-width: 720px) { .row { grid-template-columns: repeat(2, 1fr); } }
+    .card { border:1px solid #ddd; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); background: #fff; }
+    label { display:block; font-weight:600; margin-bottom: 8px; }
+    select, button, input[type="checkbox"] { font-size: 16px; }
+    select { width:100%; padding: 10px; border-radius: 8px; border:1px solid #ccc; }
+    .actions { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    button { padding: 10px 14px; border:1px solid #999; border-radius: 10px; background:#f7f7f7; cursor:pointer; }
+    button:hover { background:#eee; }
+    .output { font-size: 22px; font-weight: 700; padding: 14px; border-radius: 12px; background:#f5fbff; border:1px solid #cfe8ff; margin-top:16px; }
+    .muted { color:#666; font-size: 14px; }
+    .footer { margin-top: 28px; color:#666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Pep Talk Generator</h1>
+  <div class="sub">Mix and match lines across the four columns. Click Randomize to generate, or fine tune by choosing items in the menus. Toggle Professional tone to filter out slang.</div>
+
+  <div class="actions">
+    <label><input type="checkbox" id="proOnly"> Professional tone only</label>
+    <button id="randomize">Randomize</button>
+    <button id="copy">Copy pep talk</button>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <label for="c1">Column 1</label>
+      <select id="c1"></select>
+      <div class="muted">Openers</div>
+    </div>
+    <div class="card">
+      <label for="c2">Column 2</label>
+      <select id="c2"></select>
+      <div class="muted">Focus point</div>
+    </div>
+    <div class="card">
+      <label for="c3">Column 3</label>
+      <select id="c3"></select>
+      <div class="muted">Action or quality</div>
+    </div>
+    <div class="card">
+      <label for="c4">Column 4</label>
+      <select id="c4"></select>
+      <div class="muted">Mic drop</div>
+    </div>
+  </div>
+
+  <div class="output" id="out"></div>
+
+  <div class="footer">
+    Built for Elizabeth. Tip: click Copy, paste into slides or emails, then tweak. No em dashes used.
+  </div>
+
+<script>
+// Original phrases
+const col1_base = ["Champ,","Fact:","Everybody says","Dang...","Friend,","Just saying...","Superstar,","Tiger,","Self,","Know this:","News Alert:","I mean...","Ace:","Excuse me but","Experts agree:","In my opinion","Hear ye, hear ye:","Okay, listen up:"];
+const col2_base = ["the mere idea of you","your soul","your vibe today","everything you do","your personal style","every thought you have","that sparkle in your eye","your presence here","what you got going on","the essential you","your life’s journey","that saucy personality","your DNA","that brain of yours","your awesome ideas","the way you think","what ever your secret is","all that you share"];
+const col3_base = ["has serious game,","rains magic,","deserves the Nobel prize,","is fire,","breeds miracles,","is paying off big time,","shows master skills,","just shimmers,","is a national treasure,","should be bottled and sold,","is the next big thing,","roars like a lion,","is a rainbow factory,","is made of diamonds,","makes birds sing,","should be taught in school,","makes my world go ‘round,","is 100% legit,"];
+const col4_base = ["24/7.","you got this.","and that’s a fact.","so treat yourself.","now crush it.","that’s just science.","would I lie?","for reals.","mic drop.","you hidden gem.","keep on, keeping on.","period.","make it happen!","now, let’s dance!","high five to you.","say it again!","according to CNN.","so get used to it."];
+
+// Updated phrases
+const col1_new = ["Legend,","Real talk:","No cap,","Boss,","Rockstar,","Fam,","Innovator,","Trailblazer,","Visionary,","Captain,"];
+const col2_new = ["your energy","that growth mindset","your grind","your brilliance","that bold spirit","your leadership","your creativity","your resilience","your authenticity","your big brain"];
+const col3_new = ["slays the day,","sparks wildfire,","breaks barriers,","flips the script,","redefines excellence,","rewrites the rules,","keeps raising bars,","radiates greatness,","turns pressure into diamonds,","is unstoppable,"];
+const col4_new = ["periodt.","say less.","believe that.","for the culture.","no debate.","let’s run it back.","boom.","facts only.","always has, always will.","certified."];
+
+// Mark which of the updated items are slangy for filtering
+const slang1 = new Set(["No cap,","Fam,"]);
+const slang4 = new Set(["periodt.","say less.","for the culture.","no debate.","let’s run it back.","boom.","facts only.","always has, always will.","certified."]);
+
+// Merge arrays
+function merged(listBase, listNew, filterProfessional=false, slangSet=new Set()) {
+  let merged = listBase.concat(listNew);
+  if (filterProfessional) {
+    merged = merged.filter(x => !slangSet.has(x));
+  }
+  return merged;
+}
+
+// Populate selects
+function populate(proOnly) {
+  const c1 = document.getElementById('c1');
+  const c2 = document.getElementById('c2');
+  const c3 = document.getElementById('c3');
+  const c4 = document.getElementById('c4');
+  const lists = [
+    merged(col1_base, col1_new, proOnly, slang1),
+    merged(col2_base, col2_new, proOnly),
+    merged(col3_base, col3_new, proOnly),
+    merged(col4_base, col4_new, proOnly, slang4)
+  ];
+  [c1,c2,c3,c4].forEach((sel,i) => {
+    const prev = sel.value;
+    sel.innerHTML = "";
+    lists[i].forEach(opt => {
+      const o = document.createElement('option');
+      o.textContent = opt;
+      sel.appendChild(o);
+    });
+    // try to preserve previous choice if it still exists
+    if (lists[i].includes(prev)) sel.value = prev;
+  });
+  render();
+}
+
+function randomize() {
+  const selects = ['c1','c2','c3','c4'].map(id => document.getElementById(id));
+  selects.forEach(sel => {
+    const idx = Math.floor(Math.random() * sel.options.length);
+    sel.selectedIndex = idx;
+  });
+  render();
+}
+
+function render() {
+  const out = document.getElementById('out');
+  const vals = ['c1','c2','c3','c4'].map(id => document.getElementById(id).value);
+  out.textContent = vals.join(" ");
+}
+
+function copyOut() {
+  const out = document.getElementById('out').textContent;
+  navigator.clipboard.writeText(out).then(() => {
+    alert("Pep talk copied to clipboard!");
+  });
+}
+
+document.getElementById('randomize').addEventListener('click', randomize);
+document.getElementById('copy').addEventListener('click', copyOut);
+document.getElementById('proOnly').addEventListener('change', (e) => populate(e.target.checked));
+
+// Initialize
+populate(false);
+randomize();
+</script>
+</body>
+</html>
